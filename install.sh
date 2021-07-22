@@ -1,5 +1,9 @@
 #!/bin/bash
 
+set -e
+
+ARCH=$(printf "%s-%s" $(uname -m) $(uname -s)|tr A-Z a-z)
+
 fail() {
     echo "$@"
     exit 1
@@ -35,11 +39,13 @@ stage1() {
     
     cd "$HOME"
     bash <(echo "$installer") --darwin-use-unencrypted-nix-store-volume --daemon
-    source /etc/bashrc
     stage2
 }
 
 stage2() {
+    if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+      . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+    fi
     ensure_not_exist $HOME/src/github.com/jamesandariese/dotnix
     ensure_not_exist $HOME/.config/nixpkgs/home.nix
     ensure_not_exist $HOME/.nixpkgs
@@ -48,16 +54,30 @@ stage2() {
     
 
     mkdir -p $HOME/src/github.com/jamesandariese/dotnix
+    stage2_1
+}
+
+stage2_1() {
+    if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+      . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+    fi
     nix-shell -p git --run "git clone https://github.com/jamesandariese/dotnix $HOME/src/github.com/jamesandariese/dotnix"
     ln -sf $HOME/src/github.com/jamesandariese/dotnix/_nixpkgs/* $HOME/.nixpkgs/
     stage3
 }
 
 stage3() {
+    if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+      . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+    fi
     nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
     nix-channel --update
-    echo '(import <'"$HOSTNAME"'.nix>) // { home.username = "'"$USER"'"; home.homeDirectory = "/Users/'"$USER"'"; }' > "$HOME/.config/nixpkgs/home.nix"
-    export NIX_PATH=$HOME/src/github.com/jamesandariese/dotnix/nix/:$NIX_PATH
+    echo '(if builtins.pathExists "'"$HOME"'/src/github.com/jamesandariese/dotnix/nix/'"$HOSTNAME"'.nix" then import "'"$HOME"'/src/github.com/jamesandariese/dotnix/nix/'"$HOSTNAME"'.nix" else import "'"$HOME"'/src/github.com/jamesandariese/dotnix/nix/'"$ARCH"'.nix" ) // { home.username = "'"$USER"'"; home.homeDirectory = "'"$HOME"'"; }' > "$HOME/.config/nixpkgs/home.nix"
+    if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+      . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+    fi
+    export NIX_PATH=$HOME/.nix-defexpr/channels:$NIX_PATH
+    env
     nix-shell '<home-manager>' -A install
 }
 
