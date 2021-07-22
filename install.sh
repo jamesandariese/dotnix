@@ -74,7 +74,7 @@ stage3() {
     nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
     nix-channel --update
     echo '{ config, pkgs, lib, ... }:
-let ll = (import "'"$HOME"'"/src/github.com/jamesandariese/dotnix/nix/" {
+let ll = (import "'"$HOME"'/src/github.com/jamesandariese/dotnix/nix/" {
   inherit config pkgs lib;
   homeDirectory = "'"$HOME"'";
   username = "'"$USER"'";
