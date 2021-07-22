@@ -40,6 +40,9 @@ stage1() {
     
     cd "$HOME"
     bash <(echo "$installer") --darwin-use-unencrypted-nix-store-volume --daemon
+    if [ -x /usr/bin/mdutil ];then
+    echo executing sudo /usr/bin/mdutil -i on /nix
+    sudo /usr/bin/mdutil -i on /nix
     stage2
 }
 
