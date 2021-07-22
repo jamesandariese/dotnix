@@ -22,7 +22,7 @@ with import <nixpkgs> { };
   home.stateVersion = "21.11";
 
   home.packages = [
-    pkgs.nerdfonts
+    (pkgs.nerdfonts.override {fonts = [ "SourceCodePro" ]; })
     pkgs.tmux
     pkgs.neovim
     pkgs.coreutils-full

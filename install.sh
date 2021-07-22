@@ -29,7 +29,7 @@ ensure_not_exist() {
 stage1() {
     installer="$(vcurl https://nixos.org/nix/install 9561203759898da1ac8817b6d4296593af2b36471eb0055d3eb9673055fbfcdc029a102ac28a24e90d3182a429eec17f911bffcab8d958e891135bd169b0fffb)"
     ensure_not_exist $HOME/src/github.com/jamesandariese/dotnix
-    ensure_not_exist $HOME/.config/nixpkgs
+    ensure_not_exist $HOME/.config/nixpkgs/home.nix
     ensure_not_exist $HOME/.nixpkgs
     mkdir -p .config
     
@@ -40,13 +40,25 @@ stage1() {
 }
 
 stage2() {
-    echo stage2
-    echo $$ hi
-    echo returning from stage2
+    ensure_not_exist $HOME/src/github.com/jamesandariese/dotnix
+    ensure_not_exist $HOME/.config/nixpkgs/home.nix
+    ensure_not_exist $HOME/.nixpkgs
+    mkdir -p $HOME/.config/nixpkgs
+    mkdir -p $HOME/.nixpkgs
+    
+
     mkdir -p $HOME/src/github.com/jamesandariese/dotnix
     nix-shell -p git --run "git clone https://github.com/jamesandariese/dotnix $HOME/src/github.com/jamesandariese/dotnix"
-    ln -sf $HOME/src/github.com/jamesandariese/dotnix/_config $HOME/.config/nixpkgs $HOME/.config/nixpkgs
-    ln -sf $HOME/src/github.com/jamesandariese/dotnix/_nixpkgs $HOME/.config/nixpkgs $HOME/_nixpkgs
+    ln -sf $HOME/src/github.com/jamesandariese/dotnix/_nixpkgs/* $HOME/.nixpkgs/
+    stage3
+}
+
+stage3() {
+    nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+    nix-channel --update
+    echo '(import <'"$HOSTNAME"'.nix>) // { home.username = "'"$USER"'"; home.homeDirectory = "/Users/'"$USER"'"; }' > "$HOME/.config/nixpkgs/home.nix"
+    export NIX_PATH=$HOME/src/github.com/jamesandariese/dotnix/nix/:$NIX_PATH
+    nix-shell '<home-manager>' -A install
 }
 
 if [ x"$1" != x ];then
