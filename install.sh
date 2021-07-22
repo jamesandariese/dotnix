@@ -28,6 +28,7 @@ vcurl() {
 
 ensure_not_exist() {
     test -e "$1" && fail "$1 already exists"
+    return 0
 }
 
 stage1() {
@@ -72,7 +73,16 @@ stage3() {
     fi
     nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
     nix-channel --update
-    echo '(if builtins.pathExists "'"$HOME"'/src/github.com/jamesandariese/dotnix/nix/'"$HOSTNAME"'.nix" then import "'"$HOME"'/src/github.com/jamesandariese/dotnix/nix/'"$HOSTNAME"'.nix" else import "'"$HOME"'/src/github.com/jamesandariese/dotnix/nix/'"$ARCH"'.nix" ) // { home.username = "'"$USER"'"; home.homeDirectory = "'"$HOME"'"; }' > "$HOME/.config/nixpkgs/home.nix"
+    echo '{ config, pkgs, lib, ... }:
+let ll = (import "'"$HOME"'"/src/github.com/jamesandariese/dotnix/nix/" {
+  inherit config pkgs lib;
+  homeDirectory = "'"$HOME"'";
+  username = "'"$USER"'";
+  arch = "x86_64-darwin";
+});
+in
+  ll' > "$HOME/.config/nixpkgs/home.nix"
+    #echo '( import "'"$HOME"'/src/github.com/jamesandariese/dotnix/nix/'"$ARCH"'.nix" ) // { home.username = "'"$USER"'"; home.homeDirectory = "'"$HOME"'"; }' > "$HOME/.config/nixpkgs/home.nix"
     if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
       . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
     fi

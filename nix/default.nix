@@ -1,13 +1,15 @@
-with import <nixpkgs> { };
+{config, pkgs,
+homeDirectory,
+username,
+arch,
+...}:
 
 {
+  home.username = username;
+  home.homeDirectory = homeDirectory;
+
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
-
-  # Home Manager needs a bit of information about you and the
-  # paths it should manage.
-  home.username = "jandariese";
-  home.homeDirectory = "/Users/jandariese";
 
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
