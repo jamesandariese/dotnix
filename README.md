@@ -1,0 +1,2 @@
+# dotnix
+nix configs.
