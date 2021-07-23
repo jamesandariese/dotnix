@@ -1,8 +1,14 @@
-{config, pkgs,
-homeDirectory,
-username,
-arch,
-...}:
+{
+  config,
+  pkgs,
+  homeDirectory,
+  username,
+  arch,
+  hostname,
+  fqdn,
+  serial,
+  ...
+}:
 
 {
   home.username = username;
@@ -31,7 +37,7 @@ arch,
     pkgs.httpie
     pkgs.jq
     pkgs.unixtools.watch
-];
+  ];
 
   programs.alacritty.enable = true;
   programs.alacritty.package = pkgs.alacritty;

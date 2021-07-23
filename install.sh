@@ -3,6 +3,12 @@
 set -e
 
 ARCH=$(printf "%s-%s" $(uname -m) $(uname -s)|tr A-Z a-z)
+HOSTNAME=$(hostname -s)
+FQDN=$(hostname -f)
+SERIAL=
+
+[ -x /usr/sbin/system_profiler ] && SERIAL=$(/usr/sbin/system_profiler -json -detailLevel basic 2>/dev/null | jq -r '.SPHardwareDataType[].serial_number')
+
 
 fail() {
     echo "$@"
@@ -82,7 +88,10 @@ let ll = (import "'"$HOME"'/src/github.com/jamesandariese/dotnix/nix/" {
   inherit config pkgs lib;
   homeDirectory = "'"$HOME"'";
   username = "'"$USER"'";
-  arch = "x86_64-darwin";
+  arch = "'"$ARCH"'";
+  hostname = "'"$HOSTNAME"'";
+  fqdn = "'"$FQDN"'";
+  serial = "'"$SERIAL"'";
 });
 in
   ll // {
