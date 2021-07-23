@@ -88,7 +88,6 @@ in
   ll // {
     # home-manager options go here (like home.packages or programs)
   }' > "$HOME/.config/nixpkgs/home.nix"
-    #echo '( import "'"$HOME"'/src/github.com/jamesandariese/dotnix/nix/'"$ARCH"'.nix" ) // { home.username = "'"$USER"'"; home.homeDirectory = "'"$HOME"'"; }' > "$HOME/.config/nixpkgs/home.nix"
     if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
       . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
     fi
