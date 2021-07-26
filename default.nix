@@ -14,5 +14,5 @@ rec {
     };
   pkgs = import pkgs-path {};
   home-manager = pkgs.callPackage home-manager-path {};
-  home = pkgs.callPackage ./home.nix {inherit home-manager-path pkgs-path;};
+  home = import ./home.nix {inherit home-manager-path pkgs-path;};
 } 
