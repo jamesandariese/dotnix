@@ -58,9 +58,18 @@ in
 	    C=75
 	fi
 	(
-          export XYZ="$(printf "%*s" -$C "$1")"
-	  shift
+	  IN="$1"
+	  if [ x"$IN" = x"-" ];then
+	    cat
+	  else
+	    echo "$IN"
+	  fi | ${pkgs.gnused}/bin/sed -e 's/^/X/' | \
+          (
+	  while read -r REPLY;do
+	  export XYZ="$(printf "%*s" -$C "$''+''{REPLY#X}")"
           ${pkgs.powerline-go}/bin/powerline-go -shell bare -modules=shell-var -shell-var=XYZ -theme=gruvbox "$@" ;echo
+	  done
+	  )
 	)
     }
     reposummary="$(for repo in $HOME/src/github.com/jamesandariese/{dotnix,shop};do
@@ -72,10 +81,12 @@ in
         powerbanner REPOS
 	echo "$reposummary"
     fi
-    powerbanner "Welcome to $(hostname -f)"
-    powerbanner "$(uptime)"
+    (
+    echo "Welcome to $(hostname -f)"
+    echo "$(uptime)"
     echo
-    echo
+    ${pkgs.cowsay}/bin/cowsay -e '@@' -T WW 'dragon cow says hi'
+    ) | powerbanner -
   '';
 
   programs.bash.enable = true;
