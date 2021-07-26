@@ -10,7 +10,14 @@ in
   home.packages = [
     pkgs.zsh
     pkgs.yubikey-manager
-    pkgs.sl
+    pkgs.git
+    pkgs.tmux
+    pkgs.neovim
+    pkgs.coreutils-full
+    pkgs.coreutils-prefixed
+    pkgs.httpie
+    pkgs.jq
+    pkgs.unixtools.watch
   ];
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -32,7 +39,13 @@ in
   programs.zsh.enable = true;
   programs.zsh.sessionVariables = {
     NIX_PATH = "nixpkgs=${pkgs-path}:home-manager=${home-manager-path}";
-    NIX_SSL_CERT_FILE = builtins.getEnv "HOME" + "/.nix-profile/etc/ssl/certs/ca-bundle.crt";
+    NIX_SSL_CERT_FILE =
+      let p1 = builtins.getEnv "HOME" + "/.nix-profile/etc/ssl/certs/ca-bundle.crt"; in
+      if builtins.pathExists p1 then p1
+      else
+      let p2 = /etc/ssl/certs/ca-certificates.crt; in
+      if builtins.pathExists p2 then p2
+      else "";
   };
   programs.zsh.initExtra = ''
     PATH="$HOME/.nix-profile/bin:$HOME/.nix-profile/sbin:$PATH"
@@ -44,4 +57,8 @@ in
   programs.bash.initExtra = ''
     [ "$0" = -bash -a $SHLVL -lt 2 -a -x "${pkgs.zsh}/bin/zsh" ] && exec ${pkgs.zsh}/bin/zsh
   '';
+
+  programs.alacritty.enable = true;
+  programs.alacritty.package = pkgs.alacritty;
+  programs.alacritty.settings = import ./alacritty.nix;
 }
