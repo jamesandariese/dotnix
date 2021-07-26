@@ -65,6 +65,8 @@ in
   home.file.shell.target=".shell";
   home.file.shell.source="${pkgs.zsh}/bin/zsh";
 
+  programs.powerline-go.enable=true;
+
   programs.git.enable = true;
   programs.git.userName = "James Andariese";
   programs.git.userEmail = "james@strudelline.net";
