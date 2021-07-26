@@ -1,6 +1,5 @@
 {...}:
-
-rec {
+let
   path = ./.;
   home-manager-path = builtins.fetchGit {
       url = "https://github.com/nix-community/home-manager";
@@ -14,5 +13,8 @@ rec {
     };
   pkgs = import pkgs-path {};
   home-manager = pkgs.callPackage home-manager-path {};
-  home = import ./home.nix {inherit home-manager-path pkgs-path;};
+  home = pkgs.callPackage ./home.nix {inherit pkgs-path home-manager-path;};
+in
+{
+  inherit home-manager pkgs home path;
 } 
