@@ -13,7 +13,7 @@ let
     };
   pkgs = import pkgs-path {};
   home-manager = pkgs.callPackage home-manager-path {};
-  home = pkgs.callPackage ./home.nix {inherit pkgs-path home-manager-path;};
+  home = import ./home.nix {inherit pkgs-path home-manager-path;};
 in
 {
   inherit home-manager pkgs home path;
