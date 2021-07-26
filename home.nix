@@ -12,6 +12,7 @@ in
     pkgs.yubikey-manager
     pkgs.git
     pkgs.tmux
+    pkgs.eternal-terminal
     pkgs.neovim
     pkgs.coreutils-full
     pkgs.coreutils-prefixed
