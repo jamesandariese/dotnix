@@ -9,6 +9,7 @@ in
 {
   home.packages = [
     pkgs.zsh
+    pkgs.yubikey-manager
   ];
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
