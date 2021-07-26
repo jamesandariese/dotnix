@@ -31,14 +31,14 @@ You have a few options to bootstrap this depending on your long term plans:
 Both ways are good but if you ever need to change your home.stub.nix fragment, that may only be done once bootstrapping
 with git.  This file is intended to change infrequently.
 
-## Bootstrap by Copypasta (pick me)
+### Bootstrap by Copypasta (pick me)
 
 1. `mkdir -p "$HOME/.config/nixpkgs"`
 2. `nano "$HOME/.config/nixpkgs/home.nix"`
 3. paste home.stub.nix from this repo
 4. `nix-shell -p home-manager --run 'home-manager switch'`
 
-## Bootstrap by Git
+### Bootstrap by Git
 
 This method will not include a guide on using git.  Please check this repo out using whatever
 means and continue along.
@@ -48,6 +48,9 @@ The true first step is to open a terminal and cd to this folder.  So do that the
 1. `ln -sf $PWD/home.stub.nix $HOME/.config/nixpkgs/home.nix`
 2. `nix-shell -p home-manager --run 'home-manager switch'`
 
-## Development Steps
+## Shells
 
-To begin development
+`chsh` stinks real bad.  To get around that, I use [shop][1].  See the file link named "shell" in home.nix.
+Set it up system-wide to enable users of that system to bring their own provided shell (including through nix).
+
+[1]: https://github.com/jamesandariese/shop
