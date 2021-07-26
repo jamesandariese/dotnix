@@ -1,9 +1,10 @@
 { pkgs ? import <nixpkgs> {},
   pkgs-path,
   home-manager-path,
-  override,
   ...
  }:
+let
+  _ = builtins.trace "generating a home with pkgs = ${pkgs}";
 {
   home.packages = [
     pkgs.zsh
