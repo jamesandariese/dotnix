@@ -5,6 +5,7 @@
  }:
 let
   _ = builtins.trace "generating a home with pkgs = ${pkgs}";
+in
 {
   home.packages = [
     pkgs.zsh
