@@ -2,4 +2,5 @@
 
 rec {
   path = ./.;
+  home = pkgs.callPackage ./home.nix {};
 } 
