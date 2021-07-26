@@ -1,6 +1,7 @@
 { pkgs ? import <nixpkgs> {},
   pkgs-path,
   home-manager-path,
+  override,
   ...
  }:
 {
