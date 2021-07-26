@@ -54,9 +54,6 @@ in
   programs.bash.enable = true;
   # limit the bash options we use since macos still defaults to....... bash 3..............
   programs.bash.shellOptions = [ "histappend" "checkwinsize" "extglob" ];
-  programs.bash.initExtra = ''
-    [ x"$ZSH_VERSION" = x -a x"$PS1" != x ] && exec ${pkgs.zsh}/bin/zsh
-  '';
 
   programs.alacritty.enable = true;
   programs.alacritty.package = pkgs.alacritty;
