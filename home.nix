@@ -55,10 +55,15 @@ in
   # limit the bash options we use since macos still defaults to....... bash 3..............
   programs.bash.shellOptions = [ "histappend" "checkwinsize" "extglob" ];
   programs.bash.initExtra = ''
-    [ "$0" = -bash -a $SHLVL -lt 2 -a -x "${pkgs.zsh}/bin/zsh" ] && exec ${pkgs.zsh}/bin/zsh
+    [ x"$ZSH_VERSION" = x -a x"$PS1" != x ] && exec ${pkgs.zsh}/bin/zsh
   '';
 
   programs.alacritty.enable = true;
   programs.alacritty.package = pkgs.alacritty;
   programs.alacritty.settings = import ./alacritty.nix;
+
+  # help shop find our zsh
+  home.file.shell.target=".shell";
+  home.file.shell.source="${pkgs.zsh}/bin/zsh";
+
 }
