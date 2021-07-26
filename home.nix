@@ -1,4 +1,8 @@
-{ pkgs ? import <nixpkgs> {} }:
+{ pkgs ? import <nixpkgs> {},
+  pkgs-path,
+  home-manager-path,
+  ...
+ }:
 {
   home.packages = [
     pkgs.zsh
