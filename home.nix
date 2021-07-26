@@ -10,6 +10,7 @@ in
   home.packages = [
     pkgs.zsh
     pkgs.yubikey-manager
+    pkgs.sl
   ];
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -38,8 +39,9 @@ in
   '';
 
   programs.bash.enable = true;
+  # limit the bash options we use since macos still defaults to....... bash 3..............
   programs.bash.shellOptions = [ "histappend" "checkwinsize" "extglob" ];
   programs.bash.initExtra = ''
-    [ -x "${pkgs.zsh}/bin/zsh" ] && exec ${pkgs.zsh}/bin/zsh
+    [ "$0" = -bash -a $SHLVL -lt 2 -a -x "${pkgs.zsh}/bin/zsh" ] && exec ${pkgs.zsh}/bin/zsh
   '';
 }
