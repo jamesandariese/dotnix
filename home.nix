@@ -52,6 +52,8 @@ in
     PATH="$HOME/.nix-profile/bin:$HOME/.nix-profile/sbin:$PATH"
     git-get-ssh-origin() { git remote get-url origin | sed -e 's#https://github.com/\([^/]*\)/\(.*\)#git@github.com:\1/\2#' ; }
     git-set-ssh-origin() { git remote set-url origin `git-get-ssh-origin` ; }
+    
+    #[ -z "$TMUX"  ] && { tmux attach || exec tmux new-session -A -s login ; exit ; }
 
     powerbanner() {
         C=$((COLUMNS - 5))
