@@ -10,6 +10,7 @@ in
   imports = [
     ./modules/alacritty.nix
     ./modules/powercow.nix
+    ./modules/aria2.nix
   ];
 
   home.packages = [
