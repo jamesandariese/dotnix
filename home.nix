@@ -7,6 +7,11 @@ let
   _ = builtins.trace "generating a home with pkgs = ${pkgs}";
 in
 {
+  imports = [
+    ./modules/alacritty.nix
+    ./modules/powercow.nix
+  ];
+
   home.packages = [
     pkgs.zsh
     pkgs.yubikey-manager
@@ -54,64 +59,11 @@ in
     git-set-ssh-origin() { git remote set-url origin `git-get-ssh-origin` ; }
     
     #[ -z "$TMUX"  ] && { tmux attach || exec tmux new-session -A -s login ; exit ; }
-
-    powerbanner() {
-        C=$((COLUMNS - 5))
-	if [ $C -lt 20 ];then
-	    C=75
-	fi
-	(
-	  IN="$1"
-	  if [ x"$IN" = x"-" ];then
-	    cat
-	  else
-	    echo "$IN"
-	  fi | ${pkgs.gnused}/bin/sed -e 's/^/X/' | \
-          (
-	  while read -r REPLY;do
-	  export XYZ="$(printf "%*s" -$C "$''+''{REPLY#X}")"
-          ${pkgs.powerline-go}/bin/powerline-go -shell bare -modules=shell-var -shell-var=XYZ -theme=gruvbox "$@" ;echo
-	  done
-	  )
-	)
-    }
-    reposummary="$(for repo in $HOME/src/github.com/jamesandariese/{dotnix,shop};do
-                    (cd "$repo" && ${pkgs.powerline-go}/bin/powerline-go -shell bare -modules=host,cwd,git);echo
-                   done)"
-    if [ x"$reposummary" = x ];then
-        powerbanner "No repos to summarize"
-    else
-        powerbanner REPOS
-	echo "$reposummary"
-    fi
-    (
-    echo "Welcome to $(hostname -f)"
-    echo "$(uptime)"
-    echo
-    ${pkgs.cowsay}/bin/cowsay -e '@@' -T WW 'dragon cow says hi'
-    ) | powerbanner -
   '';
 
   programs.bash.enable = true;
   # limit the bash options we use since macos still defaults to....... bash 3..............
   programs.bash.shellOptions = [ "histappend" "checkwinsize" "extglob" ];
-
-
-  # alacritty
-  # we do some weird stuff with the config file in order to support the live reload.
-  # all the weird is for live reload.
-  programs.alacritty.enable = true;
-  programs.alacritty.package = pkgs.alacritty;
-
-  home.file.alacritty-config.target = ".config/alacritty/alacritty.yml.in";
-  home.file.alacritty-config.source = ./alacritty.yml;
-  home.file.alacritty-config.onChange = ''
-    # send the config to a tmp file and then pipe it into the end file so that we don't have
-    # impurity but also can use live reload (if we put the link in place directly, alacritty
-    # will watch for changes in the symlinked file in the nix store which is not only the
-    # wrong file but these files in particular are guaranteed to _never_ change -- so yeah...)
-    cat "$HOME/.config/alacritty/alacritty.yml.in" > "$HOME/.config/alacritty/alacritty.yml"
-  '';
 
   # help shop find our zsh
   home.file.shell.target=".shell";
