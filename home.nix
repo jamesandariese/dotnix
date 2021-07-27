@@ -12,9 +12,11 @@ in
     ./modules/powercow.nix
     ./modules/aria2.nix
     ./modules/_1password.nix
+    ./modules/yabai.nix
   ];
 
   home.packages = [
+    pkgs.yabai
     pkgs.zsh
     pkgs.yubikey-manager
     pkgs.git
