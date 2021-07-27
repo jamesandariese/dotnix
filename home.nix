@@ -11,6 +11,7 @@ in
     ./modules/alacritty.nix
     ./modules/powercow.nix
     ./modules/aria2.nix
+    ./modules/_1password.nix
   ];
 
   home.packages = [
