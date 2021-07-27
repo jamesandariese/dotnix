@@ -7,7 +7,7 @@ let
     then local-dotnix-path
     else builtins.fetchGit {
         url = "https://github.com/jamesandariese/dotnix/";
-        rev = "2528eb1ab9e147e5574b9d21bf2669f91cc454e8";
+        rev = "654c28e08073ace218291d00c25311747fab94be";
         ref = "main";
       };
   dotnix = import (builtins.trace "loading dotnix from ${dotnix-path}" dotnix-path) { };
