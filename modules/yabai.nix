@@ -5,9 +5,8 @@ in {
   home.packages = [
       yabai
     ];
-  home.file.yabai-config.target = ".yabairc.in";
+  home.file.yabai-config.target = ".yabairc";
   home.file.yabai-config.onChange = ''
-      cat "$HOME/.yabairc.in" > "$HOME/.yabairc"
       F="$HOME/Library/LaunchAgents/yabai.plist"
       if [ -f "$F" ];then
           launchctl unload "$F"
