@@ -58,6 +58,9 @@ in
   programs.zsh.enable = true;
   programs.zsh.initExtra = ''
     PATH="$HOME/.nix-profile/bin:$HOME/.nix-profile/sbin:$PATH"
+
+    # I need this pretty often since I easily remember the https address of my
+    # git repos but prefer to use ssh keys.  tragic, right?
     git-get-ssh-origin() { git remote get-url origin | sed -e 's#https://github.com/\([^/]*\)/\(.*\)#git@github.com:\1/\2#' ; }
     git-set-ssh-origin() { git remote set-url origin `git-get-ssh-origin` ; }
     
