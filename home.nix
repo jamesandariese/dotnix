@@ -36,9 +36,7 @@ in
   # You can update Home Manager without changing this value. See
   # the Home Manager release notes for a list of state version
   # changes in each release.
-
-  programs.zsh.enable = true;
-  programs.zsh.sessionVariables = {
+  home.sessionVariables = {
     NIX_PATH = "nixpkgs=${pkgs-path}:home-manager=${home-manager-path}";
     NIX_SSL_CERT_FILE =
       let p1 = builtins.getEnv "HOME" + "/.nix-profile/etc/ssl/certs/ca-bundle.crt"; in
@@ -48,6 +46,8 @@ in
       if builtins.pathExists p2 then p2
       else "";
   };
+
+  programs.zsh.enable = true;
   programs.zsh.initExtra = ''
     PATH="$HOME/.nix-profile/bin:$HOME/.nix-profile/sbin:$PATH"
     git-get-ssh-origin() { git remote get-url origin | sed -e 's#https://github.com/\([^/]*\)/\(.*\)#git@github.com:\1/\2#' ; }
@@ -126,4 +126,5 @@ in
       pull.ff = "only";
     };
 
+  programs.man.enable = true;
 }

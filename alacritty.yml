@@ -9,7 +9,7 @@ window:
     columns: 132
   padding:
     x: 10
-    'y': 10
+    y: 10
 cursor:
   style:
     shape: Block
