@@ -12,8 +12,9 @@ in
     ./modules/powercow.nix
     ./modules/aria2.nix
     ./modules/_1password.nix
+  ] ++ (if pkgs.stdenv.isDarwin then [
     ./modules/yabai.nix
-  ];
+  ] else []);
 
   home.packages = [
     pkgs.yabai
