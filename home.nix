@@ -17,7 +17,6 @@ in
   ] else []);
 
   home.packages = [
-    pkgs.yabai
     pkgs.zsh
     pkgs.yubikey-manager
     pkgs.git
