@@ -43,6 +43,7 @@ in
   # the Home Manager release notes for a list of state version
   # changes in each release.
   home.sessionVariables = {
+    NIXPKGS_ALLOW_UNFREE = 1;
     NIX_PATH = "nixpkgs=${pkgs-path}:home-manager=${home-manager-path}";
     NIX_SSL_CERT_FILE =
       let p1 = builtins.getEnv "HOME" + "/.nix-profile/etc/ssl/certs/ca-bundle.crt"; in
