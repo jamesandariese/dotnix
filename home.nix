@@ -14,6 +14,7 @@ in
     ./modules/_1password.nix
   ] ++ (if pkgs.stdenv.isDarwin then [
     ./modules/yabai.nix
+    ./modules/osxtweaks.nix
   ] else []);
 
   home.packages = [
