@@ -1,19 +1,34 @@
-{ pkgs ? import <nixpkgs> {},
-  pkgs-path,
-  home-manager-path,
-  ...
- }:
+{ ... }:
 let
+  home-manager-path = builtins.fetchGit {
+      url = "https://github.com/nix-community/home-manager";
+      ref = "release-21.05";
+      rev = "9c0abed5228d54aad120b4bc757b6f5935aeda1c";
+    };
+  pkgs-path =
+    let local-pkgs = (builtins.getEnv "HOME") + "/src/github.com/jamesandariese/nixpkgs";
+    in if builtins.pathExists local-pkgs then
+        local-pkgs
+      else
+        builtins.trace "ynixpkgs from git"
+        builtins.fetchGit {
+            url = "https://github.com/nixos/nixpkgs";
+            ref = "nixos-unstable";
+            rev = "dd14e5d78e90a2ccd6007e569820de9b4861a6c2";
+          };
+  pkgs = import (builtins.trace "znixpkgs from ${pkgs-path}" pkgs-path) {};
+  home-manager = pkgs.callPackage home-manager-path {};
   _ = builtins.trace "generating a home with pkgs = ${pkgs}";
 in
 {
+  #my = { inherit pkgs pkgs-path home-manager home-manager-path; };
   imports = [
     ./modules/alacritty.nix
     ./modules/powercow.nix
     ./modules/aria2.nix
     ./modules/_1password.nix
   ] ++ (if pkgs.stdenv.isDarwin then [
-    ./modules/yabai.nix
+    (builtins.trace "pkgs is at ${pkgs.path}" ./modules/yabai.nix)
     ./modules/osxtweaks.nix
   ] else []);
 
@@ -47,6 +62,8 @@ in
   # the Home Manager release notes for a list of state version
   # changes in each release.
   home.sessionVariables = {
+    MYNIXPKGS = "${pkgs-path}";
+    MYNIXPKGS2 = "${pkgs.path}";
     NIXPKGS_ALLOW_UNFREE = 1;
     NIX_PATH = "nixpkgs=${pkgs-path}:home-manager=${home-manager-path}";
     NIX_SSL_CERT_FILE =
