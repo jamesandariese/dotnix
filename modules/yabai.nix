@@ -2,13 +2,13 @@
 let
   yabai = pkgs.yabai;
   skhd = pkgs.skhd;
+  alacritty = pkgs.alacritty;
   spacebar = pkgs.spacebar;
   qes = pkgs.qes;
   jq = pkgs.jq;
   bash = pkgs.bash;
   flock = pkgs.flock;
   tmux = pkgs.tmux;
-  alacritty = pkgs.alacritty;
   imagemagick = pkgs.imagemagick;
   _123background = ./123background.png;
 in {
@@ -44,14 +44,15 @@ in {
       ${yabai}/bin/yabai -m config left_padding 12
       ${yabai}/bin/yabai -m config right_padding 12
       ${yabai}/bin/yabai -m config window_gap 12
-      ${yabai}/bin/yabai -m config external_bar all:0:36
+      ${yabai}/bin/yabai -m config external_bar all:0:26
       
       ${yabai}/bin/yabai -m config focus_follows_mouse autofocus
+      ${yabai}/bin/yabai -m config mouse_follows_focus on
       ${yabai}/bin/yabai -m config mouse_action1 resize
       ${yabai}/bin/yabai -m config mouse_action2 move
       ${yabai}/bin/yabai -m config window_shadow off
       ${yabai}/bin/yabai -m config window_border on
-      ${yabai}/bin/yabai -m config normal_window_border_color 0xff102030
+      ${yabai}/bin/yabai -m config normal_window_border_color 0xff303030
       ${yabai}/bin/yabai -m config active_window_border_color 0xff006600
 
       ${yabai}/bin/yabai -m signal --add label=dock-restart-rule event=dock_did_restart action="sudo /Users/james/.nix-profile/bin/yabai --load-sa"
@@ -95,10 +96,11 @@ in {
     '';
 
   home.file.skhd-config.text = let
+    yabai_lock_off = ''${yabai}/bin/yabai -m config active_window_border_color 0xFF006600'';
+    yabai_lock_on = ''${yabai}/bin/yabai -m config active_window_border_color 0xFF00FF00'';
     yabai_tmux_off = ''echo tmux off;${flock}/bin/flock ${spacebar}/bin/spacebar ${spacebar}/bin/spacebar -m config background_color 0xff202020'';
     yabai_tmux_on =  ''echo tmux on; ${flock}/bin/flock ${spacebar}/bin/spacebar ${spacebar}/bin/spacebar -m config background_color 0xff902020'';
     press = key: ''${qes}/bin/qes -k '${key}' '';
-    crazy = "ctrl + alt + shift - f20";
     # screen prefix
     prefix = "ctrl - b";
     # and we'll use xoff to replicate locking
@@ -107,22 +109,22 @@ in {
     lock = "ctrl - s";
     unlock = "ctrl - q";
   in ''
-      :: default : echo default mode;${yabai_tmux_off}
-      :: tmux  @ : ${yabai_tmux_on}
-      :: lock    : ${yabai_tmux_off};echo locked
-      :: crazy   : echo crazy mode
+      :: default : echo default mode;${yabai_tmux_off};${yabai_lock_off}
+      :: tmux  @ : ${yabai_tmux_on};${yabai_lock_off}
+      :: lock    : ${yabai_tmux_off};echo locked;${yabai_lock_on}
       
       default < ${prefix}    ;tmux
       tmux    < ${lock}      ;lock
       lock    < ${unlock}    ;default
-      tmux    < ${crazy}     ;crazy
-      default < ${crazy}     ;crazy
-      crazy   < ${crazy}     ;crazy
       tmux    < ${prefix} -> ;default
-      crazy   < ${prefix} -> ;default
-      crazy   < escape       ;default
-      tmux    < n            : ${press "escape"};${yabai}/bin/yabai -m space --focus next
-      tmux    < p            : ${press "escape"};${yabai}/bin/yabai -m space --focus prev
+      tmux    < n            : ${press "escape"};${yabai}/bin/yabai -m space --focus next || ${yabai}/bin/yabai -m space --focus first
+      tmux    < p            : ${press "escape"};${yabai}/bin/yabai -m space --focus prev || ${yabai}/bin/yabai -m space --focus last
+      tmux    < left         : ${press "escape"};${yabai}/bin/yabai -m window --focus west
+      tmux    < right        : ${press "escape"};${yabai}/bin/yabai -m window --focus east
+      tmux    < down         : ${press "escape"};${yabai}/bin/yabai -m window --focus south
+      tmux    < up           : ${press "escape"};${yabai}/bin/yabai -m window --focus north
+      tmux    < shift - 0x27 : ${press "escape"};${yabai}/bin/yabai -m window --insert south ; nohup ${alacritty}/bin/alacritty -o window.startup_mode=Windowed &
+      tmux    < shift - 5    : ${press "escape"};${yabai}/bin/yabai -m window --insert east ; nohup ${alacritty}/bin/alacritty -o window.startup_mode=Windowed &
       tmux    < l            : ${press "escape"};${yabai}/bin/yabai -m space --focus recent
       tmux    < z            : ${yabai}/bin/yabai -m window --focus "$(${yabai}/bin/yabai -m query --windows --window | ${jq}/bin/jq -er .id)";${yabai}/bin/yabai -m window --toggle zoom-fullscreen;${press "escape"}
       tmux    < o            : ${press "escape"};${yabai}/bin/yabai -m window --focus next
