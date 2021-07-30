@@ -3,6 +3,7 @@ let
   yabai = pkgs.yabai;
   skhd = pkgs.skhd;
   alacritty = pkgs.alacritty;
+  coreutils = pkgs.coreutils;
   spacebar = pkgs.spacebar;
   qes = pkgs.qes;
   jq = pkgs.jq;
@@ -11,11 +12,28 @@ let
   tmux = pkgs.tmux;
   imagemagick = pkgs.imagemagick;
   _123background = ./123background.png;
+  enable-sa = pkgs.writeTextFile {
+      name = "enable-sa";
+      text = ''
+        echo '%staff ALL = (root) NOPASSWD: ${yabai}/bin/yabai --load-sa' |${coreutils}/bin/tee /etc/sudoers.d/yabai-nix
+        #              sudoers doesn't load files with dots.  don't forget to not add dots. ^^^ here
+        ${yabai}/bin/yabai --install-sa && exit 0
+
+        # dragons be here
+	echo "failed to install scripting additions.  this is usually because of system filesystem integrity protection being left on.
+        echo "try running the following from a terminal to see more output:
+	echo "    sudo ${yabai}/bin/yabai --install-sa"
+	exit 1
+      '';
+      executable = true;
+      destination = "/enable-sa";
+    };
 in {
   imports = [
       ./emacs.nix
   ];
   home.packages = [
+      (pkgs.nerdfonts.override { fonts = [ "SourceCodePro" ]; })
       yabai
       skhd
       jq
@@ -28,14 +46,18 @@ in {
   home.file.yabai-background-fix.text = ''
       /usr/bin/osascript -e 'tell application "Finder" to set desktop picture to POSIX file "${_123background}"'
   '';
+
+  home.activation.yabai-load-sa = ''
+    /usr/bin/osascript -e 'do shell script "${bash}/bin/bash ${enable-sa}/enable-sa 2>&1" with administrator privileges'
+
+  '';
   home.file.yabai-config.target = ".yabairc";
   home.file.yabai-config.onChange = ''
       F="$HOME/Library/LaunchAgents/yabai.plist"
-      if [ -f "$F" ];then
-          launchctl unload "$F"
-          launchctl load "$F"
-      fi
+      launchctl unload -w "$F"
+      launchctl load -w "$F"
     '';
+  home.file.yabai-config.executable = true;
   home.file.yabai-config.text = ''
       echo "yabai reconfiguring $(date)"
       # this layout bsp without a space doesn't appear in the docs but it
@@ -58,13 +80,16 @@ in {
       ${yabai}/bin/yabai -m config normal_window_border_color 0xff303030
       ${yabai}/bin/yabai -m config active_window_border_color 0xff006600
 
-      ${yabai}/bin/yabai -m signal --add label=dock-restart-rule event=dock_did_restart action="sudo /Users/james/.nix-profile/bin/yabai --load-sa"
+      ${yabai}/bin/yabai -m signal --add label=dock-restart-rule event=dock_did_restart action="sudo ${yabai}/bin/yabai --load-sa"
       ${yabai}/bin/yabai -m signal --add label=space_background_fix event=space_changed action="${bash}/bin/bash $HOME/.fix-background.sh;${yabai}/bin/yabai -m window --focus mouse"
       ${bash}/bin/bash $HOME/.fix-background.sh
+      sudo ${yabai}/bin/yabai --load-sa
     '';
   home.file.yabai-launchcfg.target = "Library/LaunchAgents/yabai.plist";
   home.file.yabai-launchcfg.onChange = ''
-      launchctl load $HOME/Library/LaunchAgents/yabai.plist
+      F="$HOME/Library/LaunchAgents/yabai.plist"
+      launchctl unload -w "$F"
+      launchctl load -w "$F"
     '';
   home.file.yabai-launchcfg.text = ''
       <!-- It's not advisable to edit this plist, it may be overwritten -->
@@ -81,9 +106,9 @@ in {
         <key>KeepAlive</key>
         <true/>
         <key>StandardErrorPath</key>
-        <string>/Users/james/Library/Logs/yabai.log</string>
+        <string>${builtins.getEnv "HOME"}/Library/Logs/yabai.log</string>
         <key>StandardOutPath</key>
-        <string>/Users/james/Library/Logs/yabai.log</string>
+        <string>${builtins.getEnv "HOME"}/Library/Logs/yabai.log</string>
       </dict>
       </plist>
     '';
@@ -92,12 +117,10 @@ in {
   home.file.skhd-config.target = ".skhdrc";
   home.file.skhd-config.onChange = ''
       F="$HOME/Library/LaunchAgents/skhd.plist"
-      if [ -f "$F" ];then
-          launchctl unload "$F"
-          launchctl load "$F"
-      fi
+      launchctl unload -w "$F"
+      launchctl load -w "$F"
     '';
-
+  home.file.skhd-config.executable = true;
   home.file.skhd-config.text = let
     yabai_lock_off = ''${yabai}/bin/yabai -m config active_window_border_color 0xFF006600'';
     yabai_lock_on = ''${yabai}/bin/yabai -m config active_window_border_color 0xFF00FF00'';
@@ -143,7 +166,9 @@ in {
     '';
   home.file.skhd-launchcfg.target = "Library/LaunchAgents/skhd.plist";
   home.file.skhd-launchcfg.onChange = ''
-      launchctl load $HOME/Library/LaunchAgents/skhd.plist
+      F="$HOME/Library/LaunchAgents/skhd.plist"
+      launchctl unload -w "$F"
+      launchctl load -w "$F"
     '';
   home.file.skhd-launchcfg.text = ''
       <!-- It's not advisable to edit this plist, it may be overwritten -->
@@ -160,9 +185,9 @@ in {
         <key>KeepAlive</key>
         <true/>
         <key>StandardErrorPath</key>
-        <string>/Users/james/Library/Logs/skhd.log</string>
+        <string>${builtins.getEnv "HOME"}/Library/Logs/skhd.log</string>
         <key>StandardOutPath</key>
-        <string>/Users/james/Library/Logs/skhd.log</string>
+        <string>${builtins.getEnv "HOME"}/Library/Logs/skhd.log</string>
       </dict>
       </plist>
     '';
@@ -171,14 +196,11 @@ in {
   home.file.spacebar-config.target = ".spacebarrc";
   home.file.spacebar-config.onChange = ''
       F="$HOME/Library/LaunchAgents/spacebar.plist"
-      if [ -f "$F" ];then
-          launchctl unload "$F"
-          launchctl load "$F"
-      fi
+      launchctl unload -w "$F"
+      launchctl load -w "$F"
     '';
-
+  home.file.spacebar-config.executable = true;    
   home.file.spacebar-config.text = let
-    
   in ''
     #!${bash}/bin/bash
     # seems to be some sort of race condition if I run too many spacebar -ms at once.
@@ -222,7 +244,9 @@ in {
 
   home.file.spacebar-launchcfg.target = "Library/LaunchAgents/spacebar.plist";
   home.file.spacebar-launchcfg.onChange = ''
-      launchctl load $HOME/Library/LaunchAgents/spacebar.plist
+      F="$HOME/Library/LaunchAgents/spacebar.plist"
+      launchctl unload -w "$F"
+      launchctl load -w "$F"
     '';
   home.file.spacebar-launchcfg.text = ''
       <!-- It's not advisable to edit this plist, it may be overwritten -->
@@ -239,9 +263,9 @@ in {
         <key>KeepAlive</key>
         <true/>
         <key>StandardErrorPath</key>
-        <string>/Users/james/Library/Logs/spacebar.log</string>
+        <string>${builtins.getEnv "HOME"}/Library/Logs/spacebar.log</string>
         <key>StandardOutPath</key>
-        <string>/Users/james/Library/Logs/spacebar.log</string>
+        <string>${builtins.getEnv "HOME"}/Library/Logs/spacebar.log</string>
       </dict>
       </plist>
     '';

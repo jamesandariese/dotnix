@@ -33,6 +33,7 @@ in
   ] else []);
 
   home.packages = [
+    (pkgs.nerdfonts.override { fonts = [ "SourceCodePro" ]; })
     pkgs.zsh
     pkgs.yubikey-manager
     pkgs.git
