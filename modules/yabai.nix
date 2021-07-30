@@ -12,6 +12,9 @@ let
   imagemagick = pkgs.imagemagick;
   _123background = ./123background.png;
 in {
+  imports = [
+      ./emacs.nix
+  ];
   home.packages = [
       yabai
       skhd
@@ -48,8 +51,8 @@ in {
       
       ${yabai}/bin/yabai -m config focus_follows_mouse autofocus
       ${yabai}/bin/yabai -m config mouse_follows_focus on
-      ${yabai}/bin/yabai -m config mouse_action1 resize
-      ${yabai}/bin/yabai -m config mouse_action2 move
+      ${yabai}/bin/yabai -m config mouse_action1 move
+      ${yabai}/bin/yabai -m config mouse_action2 resize
       ${yabai}/bin/yabai -m config window_shadow off
       ${yabai}/bin/yabai -m config window_border on
       ${yabai}/bin/yabai -m config normal_window_border_color 0xff303030
@@ -108,6 +111,7 @@ in {
     # to go in and out of scopes.  woo.
     lock = "ctrl - s";
     unlock = "ctrl - q";
+    yabai_resize_px = "42";
   in ''
       :: default : echo default mode;${yabai_tmux_off};${yabai_lock_off}
       :: tmux  @ : ${yabai_tmux_on};${yabai_lock_off}
@@ -123,12 +127,18 @@ in {
       tmux    < right        : ${press "escape"};${yabai}/bin/yabai -m window --focus east
       tmux    < down         : ${press "escape"};${yabai}/bin/yabai -m window --focus south
       tmux    < up           : ${press "escape"};${yabai}/bin/yabai -m window --focus north
-      tmux    < shift - 0x27 : ${press "escape"};${yabai}/bin/yabai -m window --insert south ; nohup ${alacritty}/bin/alacritty -o window.startup_mode=Windowed &
-      tmux    < shift - 5    : ${press "escape"};${yabai}/bin/yabai -m window --insert east ; nohup ${alacritty}/bin/alacritty -o window.startup_mode=Windowed &
+      tmux    < ctrl - up    : echo cup;${press "escape"};${yabai}/bin/yabai -m window --resize top:0:-${yabai_resize_px} || ${yabai}/bin/yabai -m window --resize bottom:0:-${yabai_resize_px}
+      tmux    < ctrl - down  : echo cdw;${press "escape"};${yabai}/bin/yabai -m window --resize bottom:0:${yabai_resize_px} || ${yabai}/bin/yabai -m window --resize top:0:${yabai_resize_px}
+      tmux    < ctrl - left  : echo clf;${press "escape"};${yabai}/bin/yabai -m window --resize left:-${yabai_resize_px}:0 || ${yabai}/bin/yabai -m window --resize right:-${yabai_resize_px}:0
+      tmux    < ctrl - right : echo crt;${press "escape"};${yabai}/bin/yabai -m window --resize right:${yabai_resize_px}:0 || ${yabai}/bin/yabai -m window --resize left:${yabai_resize_px}:0
+
+      tmux    < shift - 0x27 : ${press "escape"};${yabai}/bin/yabai -m window --insert south ; $HOME/bin/eew
+      tmux    < shift - 5    : ${press "escape"};${yabai}/bin/yabai -m window --insert east ; $HOME/bin/eew
+      tmux    < c            : ${press "escape"};${yabai}/bin/yabai -m space --create ; ${yabai}/bin/yabai -m space --focus last ; nohup ${alacritty}/bin/alacritty -o window.startup_mode=Windowed 2>&1 >/dev/null &
       tmux    < l            : ${press "escape"};${yabai}/bin/yabai -m space --focus recent
       tmux    < z            : ${yabai}/bin/yabai -m window --focus "$(${yabai}/bin/yabai -m query --windows --window | ${jq}/bin/jq -er .id)";${yabai}/bin/yabai -m window --toggle zoom-fullscreen;${press "escape"}
       tmux    < o            : ${press "escape"};${yabai}/bin/yabai -m window --focus next
-      tmux    < shift - 7    : ${press "escape"};${yabai}/bin/yabai -m space --layout bsp
+      tmux    < shift - 7    : ${press "escape"};${yabai}/bin/yabai -m space --destroy
       tmux    < escape       ;default
     '';
   home.file.skhd-launchcfg.target = "Library/LaunchAgents/skhd.plist";

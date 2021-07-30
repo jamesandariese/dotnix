@@ -5,6 +5,11 @@
         ${pkgs.bash}/bin/bash "$HOME/.defaultsrc.sh"
       '';
     home.file.osx-defaults.text = ''
+        # Disable window open animations.  With a fast menu program, this enables using a
+        # program as a menu in a tiling wm rather than requiring the wm itself to provide
+        # menuing.
+        defaults write -g NSAutomaticWindowAnimationsEnabled -bool false
+
         # Disable the dock entirely.  use Cmd-Opt-D to toggle it on and off
         #  (this actually toggles hiding so the autohide delay is turned on and off, basically)
         defaults write com.apple.dock autohide-delay -float 1000
