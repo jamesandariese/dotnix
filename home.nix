@@ -78,7 +78,7 @@ in
 
   programs.zsh.enable = true;
   programs.zsh.initExtra = ''
-    PATH="$HOME/.nix-profile/bin:$HOME/.nix-profile/sbin:$PATH"
+    PATH="$HOME/bin:$HOME/.nix-profile/bin:$HOME/.nix-profile/sbin:$PATH"
 
     # I need this pretty often since I easily remember the https address of my
     # git repos but prefer to use ssh keys.  tragic, right?
