@@ -21,21 +21,38 @@
 
         killall Dock
 
-        defaults write -g "com.apple.trackpad.enableSecondaryClick" -float 1
-        defaults write -g "com.apple.trackpad.fiveFingerPinchSwipeGesture" -float 0
-        defaults write -g "com.apple.trackpad.fourFingerHorizSwipeGesture" -float 0
-        defaults write -g "com.apple.trackpad.fourFingerPinchSwipeGesture" -float 0
-        defaults write -g "com.apple.trackpad.fourFingerVertSwipeGesture" -float 0
-        defaults write -g "com.apple.trackpad.momentumScroll" -float 1
-        defaults write -g "com.apple.trackpad.pinchGesture" -float 1
-        defaults write -g "com.apple.trackpad.rotateGesture" -float 1
-        defaults write -g "com.apple.trackpad.scrollBehavior" -float 2
-        defaults write -g "com.apple.trackpad.threeFingerDragGesture" -float 0
-        defaults write -g "com.apple.trackpad.threeFingerHorizSwipeGesture" -float 0
-        defaults write -g "com.apple.trackpad.threeFingerTapGesture" -float 0
-        defaults write -g "com.apple.trackpad.threeFingerVertSwipeGesture" -float 0
-        defaults write -g "com.apple.trackpad.twoFingerDoubleTapGesture" -float 1
-    	defaults write -g "com.apple.trackpad.twoFingerFromRightEdgeSwipeGesture" -float 3
-        defaults write -g "com.apple.trackpad.version" -float 5
+	defaults write "com.apple.AppleMultitouchTrackpad" '{
+          ActuateDetents = 1;
+          Clicking = 0;
+          DragLock = 0;
+          Dragging = 0;
+          FirstClickThreshold = 1;
+          ForceSuppressed = 0;
+          HIDScrollZoomModifierMask = 0;
+          SecondClickThreshold = 1;
+          TrackpadCornerSecondaryClick = 0;
+          TrackpadFiveFingerPinchGesture = 0;
+          TrackpadFourFingerHorizSwipeGesture = 0;
+          TrackpadFourFingerPinchGesture = 0;
+          TrackpadFourFingerVertSwipeGesture = 0;
+          TrackpadHandResting = 1;
+          TrackpadHorizScroll = 1;
+          TrackpadMomentumScroll = 1;
+          TrackpadPinch = 1;
+          TrackpadRightClick = 1;
+          TrackpadRotate = 1;
+          TrackpadScroll = 1;
+          TrackpadThreeFingerDrag = 0;
+          TrackpadThreeFingerHorizSwipeGesture = 0;
+          TrackpadThreeFingerTapGesture = 0;
+          TrackpadThreeFingerVertSwipeGesture = 0;
+          TrackpadTwoFingerDoubleTapGesture = 1;
+          TrackpadTwoFingerFromRightEdgeSwipeGesture = 3;
+          USBMouseStopsTrackpad = 0;
+          UserPreferences = 1;
+          version = 12;
+	}'
+
+
       '';
 }
