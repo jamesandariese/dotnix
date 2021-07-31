@@ -20,5 +20,22 @@
         defaults write 'Apple Global Domain' _HIHideMenuBar -float 1
 
         killall Dock
+
+        defaults write -g "com.apple.trackpad.enableSecondaryClick" -float 1
+        defaults write -g "com.apple.trackpad.fiveFingerPinchSwipeGesture" -float 0
+        defaults write -g "com.apple.trackpad.fourFingerHorizSwipeGesture" -float 0
+        defaults write -g "com.apple.trackpad.fourFingerPinchSwipeGesture" -float 0
+        defaults write -g "com.apple.trackpad.fourFingerVertSwipeGesture" -float 0
+        defaults write -g "com.apple.trackpad.momentumScroll" -float 1
+        defaults write -g "com.apple.trackpad.pinchGesture" -float 1
+        defaults write -g "com.apple.trackpad.rotateGesture" -float 1
+        defaults write -g "com.apple.trackpad.scrollBehavior" -float 2
+        defaults write -g "com.apple.trackpad.threeFingerDragGesture" -float 0
+        defaults write -g "com.apple.trackpad.threeFingerHorizSwipeGesture" -float 0
+        defaults write -g "com.apple.trackpad.threeFingerTapGesture" -float 0
+        defaults write -g "com.apple.trackpad.threeFingerVertSwipeGesture" -float 0
+        defaults write -g "com.apple.trackpad.twoFingerDoubleTapGesture" -float 1
+    	defaults write -g "com.apple.trackpad.twoFingerFromRightEdgeSwipeGesture" -float 3
+        defaults write -g "com.apple.trackpad.version" -float 5
       '';
 }
