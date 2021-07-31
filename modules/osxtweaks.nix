@@ -21,6 +21,35 @@
 
         killall Dock
 
+	defaults write "com.apple.driver.AppleBluetoothMultitouch.trackpad" '{
+          Clicking = 0;
+          DragLock = 0;
+          Dragging = 0;
+          HIDScrollZoomModifierMask = 0;
+          TrackpadCornerSecondaryClick = 0;
+          TrackpadFiveFingerPinchGesture = 0;
+          TrackpadFourFingerHorizSwipeGesture = 0;
+          TrackpadFourFingerPinchGesture = 0;
+          TrackpadFourFingerVertSwipeGesture = 0;
+          TrackpadHandResting = 1;
+          TrackpadHorizScroll = 1;
+          TrackpadMomentumScroll = 1;
+          TrackpadPinch = 1;
+          TrackpadRightClick = 1;
+          TrackpadRotate = 1;
+          TrackpadScroll = 1;
+          TrackpadThreeFingerDrag = 0;
+          TrackpadThreeFingerHorizSwipeGesture = 0;
+          TrackpadThreeFingerTapGesture = 0;
+          TrackpadThreeFingerVertSwipeGesture = 0;
+          TrackpadTwoFingerDoubleTapGesture = 1;
+          TrackpadTwoFingerFromRightEdgeSwipeGesture = 3;
+          USBMouseStopsTrackpad = 0;
+          UserPreferences = 1;
+          version = 5;
+        }'
+
+
 	defaults write "com.apple.AppleMultitouchTrackpad" '{
           ActuateDetents = 1;
           Clicking = 0;
