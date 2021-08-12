@@ -170,8 +170,8 @@ in {
       tmux    < ctrl - left  : echo clf;${press "escape"};${yabai}/bin/yabai -m window --resize left:-${yabai_resize_px}:0 || ${yabai}/bin/yabai -m window --resize right:-${yabai_resize_px}:0
       tmux    < ctrl - right : echo crt;${press "escape"};${yabai}/bin/yabai -m window --resize right:${yabai_resize_px}:0 || ${yabai}/bin/yabai -m window --resize left:${yabai_resize_px}:0
 
-      tmux    < shift - 0x27 : ${press "escape"};${yabai}/bin/yabai -m window --insert south ; $HOME/bin/eew
-      tmux    < shift - 5    : ${press "escape"};${yabai}/bin/yabai -m window --insert east ; $HOME/bin/eew
+      tmux    < shift - 0x27 : ${press "escape"};${yabai}/bin/yabai -m window --insert south ; $HOME/bin/eew --eval "(show-chooser)"
+      tmux    < shift - 5    : ${press "escape"};${yabai}/bin/yabai -m window --insert east ; $HOME/bin/eew --eval "(show-chooser)"
       tmux    < c            : ${press "escape"};${yabai}/bin/yabai -m space --create ; ${yabai}/bin/yabai -m space --focus last ; nohup ${alacritty}/bin/alacritty -o window.startup_mode=Windowed 2>&1 >/dev/null &
       tmux    < l            : ${press "escape"};${yabai}/bin/yabai -m space --focus recent
       tmux    < z            : ${yabai}/bin/yabai -m window --focus "$(${yabai}/bin/yabai -m query --windows --window | ${jq}/bin/jq -er .id)";${yabai}/bin/yabai -m window --toggle zoom-fullscreen;${press "escape"}
