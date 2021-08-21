@@ -16,10 +16,25 @@ let
   enable-sa = pkgs.writeTextFile {
       name = "enable-sa";
       text = ''
+        set -x
+        if grep -q '%staff ALL = (root) NOPASSWD: ${yabai}/bin/yabai --load-sa' /etc/sudoers.d/yabai-nix; then
+            if ${yabai}/bin/yabai --check-sa;then
+                echo "nothing to do for yabai sa"
+                exit 0
+            fi
+        fi
+        
+        if [ $UID -ne 0 ];then
+            echo restarting $0 as root
+            /usr/bin/osascript -e 'do shell script "${bash}/bin/bash '"$0"' 2>&1" with administrator privileges'
+            exit $?
+        else
+            running as root
+        fi
         echo '%staff ALL = (root) NOPASSWD: ${yabai}/bin/yabai --load-sa' |${coreutils}/bin/tee /etc/sudoers.d/yabai-nix
         #              sudoers doesn't load files with dots.  don't forget to not add dots. ^^^ here
         ${yabai}/bin/yabai --install-sa && exit 0
-
+        
         # dragons be here
 	echo "failed to install scripting additions.  this is usually because of system filesystem integrity protection being left on.
         echo "try running the following from a terminal to see more output:
@@ -49,8 +64,8 @@ in {
   '';
 
   home.activation.yabai-load-sa = ''
-    /usr/bin/osascript -e 'do shell script "${bash}/bin/bash ${enable-sa}/enable-sa 2>&1" with administrator privileges'
-
+      ${bash}/bin/bash ${enable-sa}/enable-sa 2>&1
+      #/usr/bin/osascript -e 'do shell script "${bash}/bin/bash ${enable-sa}/enable-sa 2>&1" with administrator privileges'
   '';
   home.file.yabai-config.target = ".yabairc";
   home.file.yabai-config.onChange = ''
