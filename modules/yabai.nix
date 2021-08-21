@@ -2,7 +2,7 @@
 let
   yabai = pkgs.yabai;
   skhd = pkgs.skhd;
-  alacritty = pkgs.alacritty;
+  kitty = pkgs.kitty;
   coreutils = pkgs.coreutils;
   spacebar = pkgs.spacebar;
   qes = pkgs.qes;
@@ -10,6 +10,7 @@ let
   bash = pkgs.bash;
   flock = pkgs.flock;
   tmux = pkgs.tmux;
+  zsh = pkgs.zsh;
   imagemagick = pkgs.imagemagick;
   _123background = ./123background.png;
   enable-sa = pkgs.writeTextFile {
@@ -126,6 +127,9 @@ in {
     yabai_lock_on = ''${yabai}/bin/yabai -m config active_window_border_color 0xFF00FF00'';
     yabai_tmux_off = ''echo tmux off;${flock}/bin/flock ${spacebar}/bin/spacebar ${spacebar}/bin/spacebar -m config background_color 0xff202020'';
     yabai_tmux_on =  ''echo tmux on; ${flock}/bin/flock ${spacebar}/bin/spacebar ${spacebar}/bin/spacebar -m config background_color 0xff902020'';
+    yabai_save_window = ''Wxxijfjfw=$(${yabai}/bin/yabai -m query --windows --window | jq -r .id)'';
+    yabai_focus_saved_window = ''${yabai}/bin/yabai -m window --focus $Wxxijfjfw'';
+    run_terminal = ''${coreutils}/bin/nohup ${kitty}/bin/kitty -1 sudo -i -u $USER 2>&1 > /dev/null &'';
     press = key: ''${qes}/bin/qes -k '${key}' '';
     # screen prefix
     prefix = "ctrl - b";
@@ -145,7 +149,9 @@ in {
       lock    < ${unlock}    ;default
       tmux    < ${prefix} -> ;default
       tmux    < n            : ${press "escape"};${yabai}/bin/yabai -m space --focus next || ${yabai}/bin/yabai -m space --focus first
+      tmux    < ctrl - n     : ${press "escape"};${yabai_save_window};${yabai}/bin/yabai -m window --space next || ${yabai}/bin/yabai -m window --space first;${yabai_focus_saved_window}
       tmux    < p            : ${press "escape"};${yabai}/bin/yabai -m space --focus prev || ${yabai}/bin/yabai -m space --focus last
+      tmux    < ctrl - p     : ${press "escape"};${yabai_save_window};${yabai}/bin/yabai -m window --space prev || ${yabai}/bin/yabai -m window --space last;${yabai_focus_saved_window}
       tmux    < left         : ${press "escape"};${yabai}/bin/yabai -m window --focus west
       tmux    < right        : ${press "escape"};${yabai}/bin/yabai -m window --focus east
       tmux    < down         : ${press "escape"};${yabai}/bin/yabai -m window --focus south
@@ -155,13 +161,13 @@ in {
       tmux    < ctrl - left  : echo clf;${press "escape"};${yabai}/bin/yabai -m window --resize left:-${yabai_resize_px}:0 || ${yabai}/bin/yabai -m window --resize right:-${yabai_resize_px}:0
       tmux    < ctrl - right : echo crt;${press "escape"};${yabai}/bin/yabai -m window --resize right:${yabai_resize_px}:0 || ${yabai}/bin/yabai -m window --resize left:${yabai_resize_px}:0
 
-      tmux    < shift - 0x27 : ${press "escape"};${yabai}/bin/yabai -m window --insert south ; $HOME/bin/eew
-      tmux    < shift - 5    : ${press "escape"};${yabai}/bin/yabai -m window --insert east ; $HOME/bin/eew
-      tmux    < c            : ${press "escape"};${yabai}/bin/yabai -m space --create ; ${yabai}/bin/yabai -m space --focus last ; nohup ${alacritty}/bin/alacritty -o window.startup_mode=Windowed 2>&1 >/dev/null &
+      tmux    < shift - 0x27 : ${press "escape"};${yabai}/bin/yabai -m window --insert south ; ${run_terminal}
+      tmux    < shift - 5    : ${press "escape"};${yabai}/bin/yabai -m window --insert east ; ${run_terminal}
+      tmux    < c            : ${press "escape"};${yabai}/bin/yabai -m space --create ; ${yabai}/bin/yabai -m space --focus last ; ${run_terminal}
       tmux    < l            : ${press "escape"};${yabai}/bin/yabai -m space --focus recent
       tmux    < z            : ${yabai}/bin/yabai -m window --focus "$(${yabai}/bin/yabai -m query --windows --window | ${jq}/bin/jq -er .id)";${yabai}/bin/yabai -m window --toggle zoom-fullscreen;${press "escape"}
       tmux    < o            : ${press "escape"};${yabai}/bin/yabai -m window --focus next
-      tmux    < shift - 7    : ${press "escape"};${yabai}/bin/yabai -m space --destroy
+      tmux    < shift - 7    : ${press "escape"};S=$(${yabai}/bin/yabai -m query --spaces --space | ${jq}/bin/jq -r .index);${yabai}/bin/yabai -m space --destroy;${yabai}/bin/yabai -m space --focus $S || echo ${yabai}/bin/yabai -m space --focus last
       tmux    < escape       ;default
     '';
   home.file.skhd-launchcfg.target = "Library/LaunchAgents/skhd.plist";
