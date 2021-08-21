@@ -21,67 +21,60 @@
 
         killall Dock
 
-	defaults write "com.apple.driver.AppleBluetoothMultitouch.trackpad" '{
-          Clicking = 0;
-          DragLock = 0;
-          Dragging = 0;
-          HIDScrollZoomModifierMask = 0;
-          TrackpadCornerSecondaryClick = 0;
-          TrackpadFiveFingerPinchGesture = 0;
-          TrackpadFourFingerHorizSwipeGesture = 0;
-          TrackpadFourFingerPinchGesture = 0;
-          TrackpadFourFingerVertSwipeGesture = 0;
-          TrackpadHandResting = 1;
-          TrackpadHorizScroll = 1;
-          TrackpadMomentumScroll = 1;
-          TrackpadPinch = 1;
-          TrackpadRightClick = 1;
-          TrackpadRotate = 1;
-          TrackpadScroll = 1;
-          TrackpadThreeFingerDrag = 0;
-          TrackpadThreeFingerHorizSwipeGesture = 0;
-          TrackpadThreeFingerTapGesture = 0;
-          TrackpadThreeFingerVertSwipeGesture = 0;
-          TrackpadTwoFingerDoubleTapGesture = 1;
-          TrackpadTwoFingerFromRightEdgeSwipeGesture = 3;
-          USBMouseStopsTrackpad = 0;
-          UserPreferences = 1;
-          version = 5;
-        }'
 
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking 0
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking 0
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad DragLock 0
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Dragging 0
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad HIDScrollZoomModifierMask 0
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadCornerSecondaryClick 0
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadFiveFingerPinchGesture 0
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadFourFingerHorizSwipeGesture 0
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadFourFingerPinchGesture 0
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadFourFingerVertSwipeGesture 0
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadHandResting 1
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadHorizScroll 1
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadMomentumScroll 1
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadPinch 1
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadRightClick 1
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadRotate 1
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadScroll 1
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag 0
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerHorizSwipeGesture 0
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerTapGesture 0
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerVertSwipeGesture 0
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadTwoFingerDoubleTapGesture 1
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadTwoFingerFromRightEdgeSwipeGesture 3
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad USBMouseStopsTrackpad 0
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad UserPreferences 1
 
-	defaults write "com.apple.AppleMultitouchTrackpad" '{
-          ActuateDetents = 1;
-          Clicking = 0;
-          DragLock = 0;
-          Dragging = 0;
-          FirstClickThreshold = 1;
-          ForceSuppressed = 0;
-          HIDScrollZoomModifierMask = 0;
-          SecondClickThreshold = 1;
-          TrackpadCornerSecondaryClick = 0;
-          TrackpadFiveFingerPinchGesture = 0;
-          TrackpadFourFingerHorizSwipeGesture = 0;
-          TrackpadFourFingerPinchGesture = 0;
-          TrackpadFourFingerVertSwipeGesture = 0;
-          TrackpadHandResting = 1;
-          TrackpadHorizScroll = 1;
-          TrackpadMomentumScroll = 1;
-          TrackpadPinch = 1;
-          TrackpadRightClick = 1;
-          TrackpadRotate = 1;
-          TrackpadScroll = 1;
-          TrackpadThreeFingerDrag = 0;
-          TrackpadThreeFingerHorizSwipeGesture = 0;
-          TrackpadThreeFingerTapGesture = 0;
-          TrackpadThreeFingerVertSwipeGesture = 0;
-          TrackpadTwoFingerDoubleTapGesture = 1;
-          TrackpadTwoFingerFromRightEdgeSwipeGesture = 3;
-          USBMouseStopsTrackpad = 0;
-          UserPreferences = 1;
-          version = 12;
-	}'
-
-
+	defaults write com.apple.AppleMultitouchTrackpad ActuateDetents 1
+	defaults write com.apple.AppleMultitouchTrackpad Clicking 0
+	defaults write com.apple.AppleMultitouchTrackpad DragLock 0
+	defaults write com.apple.AppleMultitouchTrackpad Dragging 0
+	defaults write com.apple.AppleMultitouchTrackpad FirstClickThreshold 1
+	defaults write com.apple.AppleMultitouchTrackpad ForceSuppressed 0
+	defaults write com.apple.AppleMultitouchTrackpad HIDScrollZoomModifierMask 0
+	defaults write com.apple.AppleMultitouchTrackpad SecondClickThreshold 1
+	defaults write com.apple.AppleMultitouchTrackpad TrackpadCornerSecondaryClick 0
+	defaults write com.apple.AppleMultitouchTrackpad TrackpadFiveFingerPinchGesture 0
+	defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerHorizSwipeGesture 0
+	defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerPinchGesture 0
+	defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerVertSwipeGesture 0
+	defaults write com.apple.AppleMultitouchTrackpad TrackpadHandResting 1
+	defaults write com.apple.AppleMultitouchTrackpad TrackpadHorizScroll 1
+	defaults write com.apple.AppleMultitouchTrackpad TrackpadMomentumScroll 1
+	defaults write com.apple.AppleMultitouchTrackpad TrackpadPinch 1
+	defaults write com.apple.AppleMultitouchTrackpad TrackpadRightClick 1
+	defaults write com.apple.AppleMultitouchTrackpad TrackpadRotate 1
+	defaults write com.apple.AppleMultitouchTrackpad TrackpadScroll 1
+	defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag 0
+	defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerHorizSwipeGesture 0
+	defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerTapGesture 0
+	defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerVertSwipeGesture 0
+	defaults write com.apple.AppleMultitouchTrackpad TrackpadTwoFingerDoubleTapGesture 1
+	defaults write com.apple.AppleMultitouchTrackpad TrackpadTwoFingerFromRightEdgeSwipeGesture 3
+	defaults write com.apple.AppleMultitouchTrackpad USBMouseStopsTrackpad 0
+	defaults write com.apple.AppleMultitouchTrackpad UserPreferences 1
       '';
 }
